@@ -3,7 +3,7 @@ const request = require('request');
 const config = require('config');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
@@ -33,13 +33,11 @@ router.get('/me', auth, async (req, res) => {
 // @route    POST api/profile
 // @desc     Create or update user profile
 // @access   Private
-router.post('/', [ auth,
-    [
-      check('status', 'Status is required').not().isEmpty(),
-      check('skills', 'Skills is required').not().isEmpty()
-    ]
-  ],
-  async (req, res) => {
+router.post('/', [ 
+  auth, [ 
+    check('status', 'Status is required').not().isEmpty(), 
+    check('skills', 'Skills is required').not().isEmpty() 
+  ]], async (req, res) => {
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {
@@ -94,8 +92,8 @@ router.post('/', [ auth,
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
-);
+  
+});
 
 // @route    GET api/profile
 // @desc     Get all profiles
